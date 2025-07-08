@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://h1eo7ubfxyyx"]
+[gd_scene load_steps=6 format=3 uid="uid://h1eo7ubfxyyx"]
 
 [ext_resource type="Script" uid="uid://be12hxgognuk5" path="res://scripts/height_map.gd" id="1_bl13t"]
 [ext_resource type="Shader" uid="uid://cyvs3kw4q5e66" path="res://shaders/color_bands_shader.gdshader" id="2_j5qij"]
 [ext_resource type="Material" uid="uid://buawy4578c21f" path="res://shaders/contur_lines_shader.tres" id="3_iyx0m"]
+[ext_resource type="Script" uid="uid://b5nulcqcwq847" path="res://scripts/thread_pool.gd" id="4_ypaqr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ypaqr"]
 shader = ExtResource("2_j5qij")
@@ -10,12 +11,15 @@ shader_parameter/bands = 10
 shader_parameter/gray_min = 0.5
 shader_parameter/gray_max = 0.8
 
-[node name="HeightMap" type="Node2D" node_paths=PackedStringArray("sprite_colors", "sprite_contours")]
+[node name="HeightMap" type="Node2D" node_paths=PackedStringArray("sprite_colors", "resource_sprite", "sprite_contours", "thread_pool")]
 script = ExtResource("1_bl13t")
 sprite_colors = NodePath("Sprite2D_Colors")
+resource_sprite = NodePath("Sprite2D_Resources")
 sprite_contours = NodePath("Sprite2D_Contours")
 color_bands_shader = SubResource("ShaderMaterial_ypaqr")
 contour_shader = ExtResource("3_iyx0m")
+thread_pool = NodePath("ThreadPool")
+draw_chunk_border = true
 texture_size = 512
 subdivisions = 2
 gray_min = 0.6
@@ -28,5 +32,11 @@ minor_opacity = 1.0
 [node name="Sprite2D_Colors" type="Sprite2D" parent="."]
 centered = false
 
+[node name="Sprite2D_Resources" type="Sprite2D" parent="."]
+centered = false
+
 [node name="Sprite2D_Contours" type="Sprite2D" parent="."]
 centered = false
+
+[node name="ThreadPool" type="Node" parent="."]
+script = ExtResource("4_ypaqr")
