@@ -1,31 +1,32 @@
 shader_type canvas_item;
 
-uniform int subdivisions = 0;
-uniform float main_thickness = 0.005;      // Height-space thickness
-uniform float minor_thickness = 0.002;
-uniform vec4 main_color : source_color = vec4(0.0);
-uniform vec4 minor_color : source_color = vec4(0.0);
-uniform float step = 0.125;                // 1.0 / bands
+// === UNIFORMS ===
+uniform int subdivisions = 0;							// Minor lines between main lines
+uniform float main_thickness = 0.005;					// Thickness of main contour lines (in height space)
+uniform float minor_thickness = 0.002;					// Thickness of minor lines
+uniform vec4 main_color : source_color = vec4(0);		// Color for main contours
+uniform vec4 minor_color : source_color = vec4(0);		// Color for minor contours
+uniform float step = 0.125;								// Distance between main contour lines (e.g. 1.0 / bands)
 
 void fragment() {
     float height = texture(TEXTURE, UV).r;
 
-    // Total divisions (main + minor lines)
+    // Compute spacing between *all* lines (main + minor)
     int total_divisions = subdivisions + 1;
     float spacing = step / float(total_divisions);
 
-    // Get position relative to the nearest contour (main or minor)
+    // Compute normalized position within one spacing unit
     float band = fract(height / spacing);
-    float dist = min(band, 1.0 - band);
+    float dist = min(band, 1.0 - band);  // Distance to nearest line center
 
-    // Check if this is a main contour line
+    // Detect whether this is a main contour
     bool is_major = abs(mod(height, step)) < (main_thickness * 0.5);
 
-    // Decide which thickness and color to use
+    // Set thickness and color accordingly
     float thickness = is_major ? main_thickness : minor_thickness;
     vec4 color = is_major ? main_color : minor_color;
 
-    // Show only pixels near the line center
+    // Only render pixels close to the line center
     if (dist > thickness * 0.5) {
         discard;
     }

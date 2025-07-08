@@ -6,16 +6,19 @@ uniform float gray_min = 0.5;    // Minimum gray level (darkest)
 uniform float gray_max = 0.8;    // Maximum gray level (lightest)
 
 void fragment() {
-    float height = texture(TEXTURE, UV).r;
-    height = clamp(height, 0.0, 1.0);
+	// Sample the height value (only red channel is used)
+	float height = texture(TEXTURE, UV).r;
+	height = clamp(height, 0.0, 1.0);
 
-    // Determine band index
-    int index = int(floor(height * float(bands)));
-    index = clamp(index, 0, bands - 1);
+	// Convert height into a band index
+	int index = int(floor(height * float(bands)));
+	index = clamp(index, 0, bands - 1);
 
-    // Map index to grayscale value in range [gray_min, gray_max]
-    float t = float(index) / float(bands - 1);
-    float level = mix(gray_min, gray_max, 1.0 - t); // 1.0 - t = high = light
+	// Normalize index to [0.0, 1.0] for interpolation
+	float t = float(index) / float(bands - 1);
 
-    COLOR = vec4(vec3(level), 1.0);
+	// Interpolate from gray_max (light) to gray_min (dark)
+	float level = mix(gray_min, gray_max, 1.0 - t);
+
+    COLOR = vec4(vec3(level), 1.0); // Output final grayscale color
 }

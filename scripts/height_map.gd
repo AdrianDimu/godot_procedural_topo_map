@@ -30,6 +30,7 @@ var is_map_ready: bool = false
 var map_gen_start_time := 0
 var noise_offset := Vector2i.ZERO
 
+
 # === Lifecycle ===
 func _ready():
 	if auto_generate:

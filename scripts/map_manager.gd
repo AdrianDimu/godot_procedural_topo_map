@@ -1,11 +1,18 @@
 extends Node2D
 
 @export var chunk_scene: PackedScene
-@export var chunk_size := 1024
-@export var view_distance := 1
+@export var chunk_size := 512
+@export var view_distance := 2
 @export var player: Node2D
 
 var loaded_chunks: Dictionary = {}
+
+
+func _ready():
+	if chunk_scene:
+		var temp_chunk = chunk_scene.instantiate()
+		chunk_size = temp_chunk.texture_size
+		temp_chunk.queue_free()
 
 func _process(_delta):
 	_update_chunks()
@@ -43,7 +50,12 @@ func _update_chunks():
 
 func _spawn_chunk(coords: Vector2i) -> Node2D:
 	var chunk = chunk_scene.instantiate()
+	
+	
+	
 	chunk.position = coords * chunk_size
 	chunk.set_offset(coords)
+	
 	add_child(chunk)
+	
 	return chunk
