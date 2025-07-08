@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dc3onyogpf8ld"]
+
+[ext_resource type="Shader" uid="uid://cyvs3kw4q5e66" path="res://shaders/color_bands_shader.gdshader" id="1_024ny"]
+
+[resource]
+shader = ExtResource("1_024ny")
+shader_parameter/bands = 10
+shader_parameter/gray_min = 0.4
+shader_parameter/gray_max = 0.6

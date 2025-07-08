@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2f3bgm32jlf"]
+
+[ext_resource type="PackedScene" uid="uid://c8ioqqcn77rj1" path="res://scenes/map_manager.tscn" id="1_4wyf3"]
+[ext_resource type="PackedScene" uid="uid://h1eo7ubfxyyx" path="res://scenes/height_map.tscn" id="2_k0juu"]
+[ext_resource type="PackedScene" uid="uid://cybema5v2dqsl" path="res://scenes/player.tscn" id="3_71j4m"]
+
+[node name="World" type="Node2D"]
+
+[node name="MapManager" parent="." node_paths=PackedStringArray("player") instance=ExtResource("1_4wyf3")]
+chunk_scene = ExtResource("2_k0juu")
+player = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("3_71j4m")]

@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://buawy4578c21f"]
+
+[ext_resource type="Shader" uid="uid://cuaai3meqp5wq" path="res://shaders/contour_lines_shader.gdshader" id="1_m8dn1"]
+
+[resource]
+shader = ExtResource("1_m8dn1")
+shader_parameter/step = 0.05
+shader_parameter/line_color = Color(0, 0, 0, 1)
+shader_parameter/fill_color = Color(0, 0, 0, 0)
