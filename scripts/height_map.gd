@@ -1,5 +1,6 @@
 extends Node2D
 
+# === Exported Inspector Variables ===
 @export var sprite_colors: Sprite2D
 @export var resource_sprite: Sprite2D
 @export var sprite_contours: Sprite2D
@@ -24,6 +25,7 @@ extends Node2D
 @export var minor_color := Color(0, 0, 0)
 @export_range(0.0, 1.0, 0.01) var minor_opacity := 0.5
 
+# === Internal State ===
 var is_map_ready: bool = false
 var noise_offset := Vector2i.ZERO
 var job_id: int = 0
@@ -87,6 +89,7 @@ func _generate_heightmap_image_threaded(params: Dictionary) -> Image:
 	var offset = params.offset
 	var texture_s = params.texture_size
 	var blur_r = params.blur_radius
+	
 	var image := Image.create(texture_s, texture_s, false, Image.FORMAT_L8)
 	for y in texture_s:
 		for x in texture_s:
@@ -96,8 +99,7 @@ func _generate_heightmap_image_threaded(params: Dictionary) -> Image:
 			image.set_pixel(x, y, Color(v, 0, 0))
 	if blur_r > 0:
 		return _blur_image(image, blur_r)
-	else:
-		return image
+	return image
 
 func _blur_image(image: Image, radius: int) -> Image:
 	var width = image.get_width()
@@ -117,12 +119,14 @@ func _blur_image(image: Image, radius: int) -> Image:
 	return blurred
 
 func apply_shader_parameters():
+	# Apply color band shader
 	var color_mat = color_bands_shader.duplicate()
 	color_mat.set_shader_parameter("bands", bands)
 	color_mat.set_shader_parameter("gray_min", gray_min)
 	color_mat.set_shader_parameter("gray_max", gray_max)
 	sprite_colors.material = color_mat
 
+	# Apply contour shader
 	var contour_mat = contour_shader.duplicate()
 	contour_mat.set_shader_parameter("step", 1.0 / float(bands))
 	contour_mat.set_shader_parameter("subdivisions", subdivisions)
@@ -134,5 +138,4 @@ func apply_shader_parameters():
 
 func _draw():
 	if draw_chunk_border:
-		var rect = Rect2(Vector2.ZERO, Vector2(texture_size, texture_size))
-		draw_rect(rect, Color(0, 1, 0, 1), false, 2.0)
+		draw_rect(Rect2(Vector2.ZERO, Vector2(texture_size, texture_size)), Color(0, 1, 0, 1), false, 2.0)
